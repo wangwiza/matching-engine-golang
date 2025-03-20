@@ -16,8 +16,8 @@ type Worker struct {
 
 func (w *Worker) Init(ctx context.Context) {
 	w.queue = make(chan *Order, QueueSize)
-	w.buyPQ = NewSortedList(true)
-	w.sellPQ = NewSortedList(false)
+	w.buyPQ = NewSortedList(false)
+	w.sellPQ = NewSortedList(true)
 
 	go func() {
 		for order := range w.queue {
