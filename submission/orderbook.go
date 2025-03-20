@@ -5,10 +5,10 @@ import (
 )
 
 type OrderBook struct {
-	ctx                     context.Context // added because may need for closing goroutines?
-	ordersChan              chan *Order
-	orderIDToInstrument     map[uint32]string
-	instrumentToWorkerQueue map[string]chan *Order
+	ctx                 context.Context // added because may need for closing goroutines?
+	ordersChan          chan *Order
+	orderIDToInstrument map[uint32]string
+	instrumentToWorker  map[string]Worker
 }
 
 func NewOrderBook() *OrderBook {
@@ -54,7 +54,7 @@ func (ob *OrderBook) dispatchOrders() {
 
 func (ob *OrderBook) AddNewWorker(instrument string) Worker {
 	var newWorker Worker
-	newWorker.Init(ctx)
+	newWorker.Init(ob.ctx)
 	ob.instrumentToWorker[instrument] = newWorker
 	return newWorker
 }
