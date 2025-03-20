@@ -57,16 +57,12 @@ func handleConn(conn net.Conn, ob *OrderBook) {
 			newOrder.Init(in.OrderId, "", 0, 0, CANCEL)
 			ob.ordersChan <- &newOrder
 		case utils.InputBuy:
-			fallthrough
-		case utils.InputSell:
-			var orderType OrderType
-			if in.OrderType == utils.InputBuy {
-				orderType = BUY
-			} else {
-				orderType = SELL
-			}
 			var newOrder Order
-			newOrder.Init(in.OrderId, in.Instrument, in.Price, in.Count, orderType)
+			newOrder.Init(in.OrderId, in.Instrument, in.Price, in.Count, BUY)
+			ob.ordersChan <- &newOrder
+		case utils.InputSell:
+			var newOrder Order
+			newOrder.Init(in.OrderId, in.Instrument, in.Price, in.Count, SELL)
 			ob.ordersChan <- &newOrder
 		default:
 			fmt.Fprintf(os.Stderr, "Got order: %c %v x %v @ %v ID: %v\n",

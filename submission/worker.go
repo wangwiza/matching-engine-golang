@@ -4,6 +4,8 @@ import (
 	"assign2/utils"
 	"context"
 	"time"
+	"fmt"
+	"os"
 )
 
 const QueueSize = 1000
@@ -12,12 +14,14 @@ type Worker struct {
 	queue  chan *Order
 	buyPQ  *SortedList
 	sellPQ *SortedList
+	inst   string
 }
 
-func (w *Worker) Init(ctx context.Context) {
+func (w *Worker) Init(ctx context.Context, instrument string) {
 	w.queue = make(chan *Order, QueueSize)
 	w.buyPQ = NewSortedList(false)
 	w.sellPQ = NewSortedList(true)
+	w.inst = instrument
 
 	go func() {
 		for order := range w.queue {
@@ -27,6 +31,7 @@ func (w *Worker) Init(ctx context.Context) {
 }
 
 func (w *Worker) handleOrder(order *Order) {
+	fmt.Fprintf(os.Stderr, "Worker(%s) received order: %v\n", w.inst, order)
 	switch order.Type {
 	case CANCEL:
 		w.handleCancel(order)
