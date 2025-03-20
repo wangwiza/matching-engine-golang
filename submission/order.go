@@ -12,7 +12,6 @@ const (
 	CANCEL
 )
 
-// Order represents a trading order with its properties
 type Order struct {
 	ID          uint32
 	Instrument  string
