@@ -4,9 +4,11 @@ import (
   "fmt"
 )
 
+type OrderType int
+
 const (
-  BUY int = 0
-  SELL    = 1
+  BUY OrderType = iota
+  SELL
 )
 
 // Order represents a trading order with its properties
@@ -15,13 +17,13 @@ type Order struct {
   Instrument  string
   Price       uint32      // Changed from uint64 to uint32
   Count       uint32      // Changed from uint64 to uint32
-  Type        int
+  Type        OrderType   // Changed OrderType to OrderType
   Timestamp   uint64
   ExecutionID uint32
   Cancelled   bool
 }
 
-func (o *Order) Init(id uint32, instrument string, price uint32, count uint32, orderType int, timestamp uint64) {
+func (o *Order) Init(id uint32, instrument string, price uint32, count uint32, orderType OrderType, timestamp uint64) {
     o.ID = id
     o.Instrument = instrument
     o.Price = price
