@@ -87,10 +87,6 @@ func OutputOrderDeleted(id uint32, accepted bool, outTime int64) {
 }
 
 func OutputOrderAdded(orderType string, orderId uint32, instrument string, price uint32, count uint32, outTime int64) {
-	// orderType := "S"
-	// if in.OrderType == InputBuy {
-	// 	orderType = "B"
-	// }
 	fmt.Printf("%v %v %v %v %v %v\n",
 		orderType, orderId, instrument, price, count, outTime)
 }
