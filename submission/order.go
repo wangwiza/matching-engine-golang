@@ -19,17 +19,15 @@ type Order struct {
 	Price       uint32    // Changed from uint64 to uint32
 	Count       uint32    // Changed from uint64 to uint32
 	Type        OrderType // Changed OrderType to OrderType
-	Timestamp   uint64
 	ExecutionID uint32
 }
 
-func (o *Order) Init(id uint32, instrument string, price uint32, count uint32, orderType OrderType, timestamp uint64) {
+func (o *Order) Init(id uint32, instrument string, price uint32, count uint32, orderType OrderType) {
 	o.ID = id
 	o.Instrument = instrument
 	o.Price = price
 	o.Count = count
 	o.Type = orderType
-	o.Timestamp = timestamp
 	o.ExecutionID = 1
 }
 
@@ -40,9 +38,9 @@ func (o *Order) Available() bool {
 
 // String implements the Stringer interface for pretty-printing
 func (o Order) String() string {
-	return fmt.Sprintf("%d %s %d %d %d %d %d",
+	return fmt.Sprintf("%d %s %d %d %d %d",
 		o.ID, o.Instrument, o.Price, o.Count, o.Type,
-		o.Timestamp, o.ExecutionID)
+		o.ExecutionID)
 }
 
 // Equal checks if two orders are equal based on their ID
