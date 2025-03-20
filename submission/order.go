@@ -19,6 +19,7 @@ type Order struct {
 	Count       uint32
 	Type        OrderType
 	ExecutionID uint32
+	Processed   chan struct{}
 }
 
 func (o *Order) Init(id uint32, instrument string, price uint32, count uint32, orderType OrderType) {
@@ -28,6 +29,7 @@ func (o *Order) Init(id uint32, instrument string, price uint32, count uint32, o
 	o.Count = count
 	o.Type = orderType
 	o.ExecutionID = 1
+	o.Processed = make(chan struct{})
 }
 
 func (o *Order) Available() bool {

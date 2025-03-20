@@ -28,12 +28,10 @@ func (ob *OrderBook) dispatchOrders() {
 	for {
 		select {
 		case order := <-ob.ordersChan: // receive order from input chan
-			// fmt.Fprintf(os.Stderr, "Received order: %v\n", order)
 			var instrument string
 			if order.Type == CANCEL {
 				// fetch instrument string from cache
 				instrument = ob.orderIDToInstrument[order.ID]
-				// fmt.Fprintf(os.Stderr, "Cancel %v mapped to: %s\n", order.ID, instrument)
 			} else {
 				// cache instrument string to order ID
 				ob.orderIDToInstrument[order.ID] = order.Instrument
@@ -45,7 +43,6 @@ func (ob *OrderBook) dispatchOrders() {
 
 			// if worker for instrument does not exist, add new worker
 			if !ok {
-				// fmt.Fprintf(os.Stderr, "Adding new worker for instrument: %s\n", instrument)
 				worker = ob.AddNewWorker(instrument)
 			}
 			// send order to worker

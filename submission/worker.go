@@ -4,8 +4,6 @@ import (
 	"assign2/utils"
 	"context"
 	"time"
-	"fmt"
-	"os"
 )
 
 const QueueSize = 1000
@@ -31,7 +29,6 @@ func (w *Worker) Init(ctx context.Context, instrument string) {
 }
 
 func (w *Worker) handleOrder(order *Order) {
-	fmt.Fprintf(os.Stderr, "Worker(%s) received order: %v\n", w.inst, order)
 	switch order.Type {
 	case CANCEL:
 		w.handleCancel(order)
@@ -48,6 +45,7 @@ func (w *Worker) handleOrder(order *Order) {
 			utils.OutputOrderAdded("S", order.ID, order.Instrument, order.Price, order.Count, GetCurrentTimestamp())
 		}
 	}
+	order.Processed <- struct{}{}
 }
 
 func priceMatched(activeOrder, bestOrder *Order) bool {
