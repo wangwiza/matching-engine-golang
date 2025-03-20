@@ -1,0 +1,43 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper, total={18cm, 26cm}]{geometry}
+\linespread{1.15}
+
+\title{CS3211 Assignment 2}
+\author{David Zhu (E0958755), William (E1496974)}
+\date{AY24/25 Semester 2}
+
+\input{preamble.tex}
+
+\begin{document}
+
+\maketitle
+
+\section{Go Features Utilized}
+
+In this section we discuss the Go features we utilized in our implementation.
+
+\subsection{Channels}
+
+\subsection{Gorountines}
+
+\subsection{Go Patterns}
+
+\section{Concurrency Level}
+
+The concurrency level of our implementation is instrument level. As \dots
+
+% section Concurrency Level (end)
+
+\section{Testing Methodology}
+
+For testing of the engine, we re-used our python script that generates random input files for the grader and we run it
+continuously check for any test failures. The generate input files of different sizes, from 4 to 40
+clients and up to 40000 orders. It is ran for $> 100$ iterations for large cases and $> 1000$
+iterations for medium size cases to ensure the engine is likely to be correct.
+The python script is in \texttt{scripts} directory. We
+also ran our engine the go data race detector to check for data races.
+
+% section Testing Methodology (end)
+
+\end{document}
+
