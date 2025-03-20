@@ -9,7 +9,6 @@ import (
 	"io"
 	"net"
 	"os"
-	"time"
 )
 
 type Engine struct {
@@ -53,16 +52,10 @@ func handleConn(conn net.Conn) {
 		switch in.OrderType {
 		case utils.InputCancel:
 			fmt.Fprintf(os.Stderr, "Got cancel ID: %v\n", in.OrderId)
-			utils.OutputOrderDeleted(in, true, GetCurrentTimestamp())
 		default:
 			fmt.Fprintf(os.Stderr, "Got order: %c %v x %v @ %v ID: %v\n",
 				in.OrderType, in.Instrument, in.Count, in.Price, in.OrderId)
-			utils.OutputOrderAdded(in, GetCurrentTimestamp())
 		}
-		utils.OutputOrderExecuted(123, 124, 1, 2000, 10, GetCurrentTimestamp())
 	}
 }
 
-func GetCurrentTimestamp() int64 {
-	return time.Now().UnixNano()
-}
