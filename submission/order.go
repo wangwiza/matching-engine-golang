@@ -1,4 +1,4 @@
-package main
+package submission
 
 import (
 	"fmt"
