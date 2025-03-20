@@ -43,6 +43,7 @@ func (e *Engine) Accept(ctx context.Context, conn net.Conn) {
 
 func handleConn(conn net.Conn, ob *OrderBook) {
 	defer conn.Close()
+	fmt.Fprintf(os.Stderr, "Accepted connection from %v\n", conn.RemoteAddr())
 	for {
 		in, err := utils.ReadInput(conn)
 		if err != nil {
@@ -51,6 +52,7 @@ func handleConn(conn net.Conn, ob *OrderBook) {
 			}
 			return
 		}
+		fmt.Fprintf(os.Stderr, "REACHED")
 		switch in.OrderType {
 		case utils.InputCancel:
 		case utils.InputBuy:
@@ -69,6 +71,7 @@ func handleConn(conn net.Conn, ob *OrderBook) {
 				Type:        orderType,
 				ExecutionID: 1,
 			}
+			fmt.Fprintf(os.Stderr, "Client sent order: %v\n", newOrder)
 			ob.ordersChan <- newOrder
 		default:
 			fmt.Fprintf(os.Stderr, "Got order: %c %v x %v @ %v ID: %v\n",
