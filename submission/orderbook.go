@@ -2,8 +2,6 @@ package submission
 
 import (
 	"context"
-	"fmt"
-	"os"
 )
 
 type OrderBook struct {
@@ -30,7 +28,6 @@ func (ob *OrderBook) dispatchOrders() {
 	for {
 		select {
 		case order := <-ob.ordersChan: // receive order from input chan
-			fmt.Fprintf(os.Stderr, "OB got order: %v\n", order)
 			var instrument string
 			if order.Type == CANCEL {
 				// fetch instrument string from cache

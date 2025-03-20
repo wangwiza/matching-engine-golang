@@ -4,8 +4,6 @@ import (
 	"assign2/utils"
 	"context"
 	"time"
-	"fmt"
-	"os"
 )
 
 const QueueSize = 1000
@@ -29,7 +27,6 @@ func (w *Worker) Init(ctx context.Context) {
 }
 
 func (w *Worker) handleOrder(order *Order) {
-	fmt.Fprintf(os.Stderr, "Handle order: %v\n", order)
 	switch order.Type {
 	case CANCEL:
 		w.handleCancel(order)
