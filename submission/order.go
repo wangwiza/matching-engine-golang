@@ -4,7 +4,7 @@ import (
 	"fmt"
 )
 
-type OrderType int
+type OrderType byte
 
 const (
 	BUY OrderType = iota
