@@ -1,23 +1,29 @@
 package submission
 
 import (
+	"assign2/wg"
 	"context"
 )
 
 type OrderBook struct {
-	ctx                 context.Context // added because may need for closing goroutines?
+	ctx                 context.Context
+	parWg               *wg.WaitGroup
+	childWg             *wg.WaitGroup
 	ordersChan          chan *Order
 	orderIDToInstrument map[uint32]string
 	instrumentToWorker  map[string]Worker
 }
 
-func NewOrderBook() *OrderBook {
+func NewOrderBook(ctx context.Context, parWg *wg.WaitGroup) *OrderBook {
 	ob := &OrderBook{
-		ctx:                 context.Background(),
+		ctx:                 ctx,
+		parWg:               parWg,
+		childWg:             &wg.WaitGroup{},
 		ordersChan:          make(chan *Order),
 		orderIDToInstrument: make(map[uint32]string),
-		instrumentToWorker:  make(map[string]Worker), // currently screams because Worker not defined yet
+		instrumentToWorker:  make(map[string]Worker),
 	}
+	parWg.Add(1)
 
 	go ob.dispatchOrders()
 
@@ -47,13 +53,17 @@ func (ob *OrderBook) dispatchOrders() {
 			}
 			// send order to worker
 			worker.queue <- order // send order to worker
+		case <-ob.ctx.Done():
+			ob.childWg.Wait()
+			ob.parWg.Done()
+			return
 		}
 	}
 }
 
 func (ob *OrderBook) AddNewWorker(instrument string) Worker {
 	var newWorker Worker
-	newWorker.Init(ob.ctx, instrument)
+	newWorker.Init(ob.ctx, ob.childWg)
 	ob.instrumentToWorker[instrument] = newWorker
 	return newWorker
 }

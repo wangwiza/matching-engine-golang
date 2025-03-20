@@ -2,6 +2,7 @@ package submission
 
 import (
 	"assign2/utils"
+	"assign2/wg"
 	"context"
 	"time"
 )
@@ -12,18 +13,23 @@ type Worker struct {
 	queue  chan *Order
 	buyPQ  *SortedList
 	sellPQ *SortedList
-	inst   string
 }
 
-func (w *Worker) Init(ctx context.Context, instrument string) {
+func (w *Worker) Init(ctx context.Context, wg *wg.WaitGroup) {
 	w.queue = make(chan *Order, QueueSize)
 	w.buyPQ = NewSortedList(false)
 	w.sellPQ = NewSortedList(true)
-	w.inst = instrument
+	wg.Add(1)
 
 	go func() {
-		for order := range w.queue {
-			w.handleOrder(order)
+		for {
+			select {
+			case order := <-w.queue:
+				w.handleOrder(order)
+			case <-ctx.Done():
+				wg.Done()
+				return
+			}
 		}
 	}()
 }

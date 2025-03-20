@@ -18,7 +18,7 @@ type Engine struct {
 
 func (e *Engine) Init(ctx context.Context, wg *wg.WaitGroup) {
 	e.wg = wg
-	e.ob = NewOrderBook()
+	e.ob = NewOrderBook(ctx, wg)
 }
 
 func (e *Engine) Shutdown(ctx context.Context) {
