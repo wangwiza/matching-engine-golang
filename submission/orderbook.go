@@ -5,7 +5,7 @@ import (
 )
 
 type OrderBook struct {
-	ctx                     context.Context
+	ctx                     context.Context // added because may need for closing goroutines?
 	ordersChan              chan *Order
 	orderIDToInstrument     map[uint32]string
 	instrumentToWorkerQueue map[string]chan *Order
@@ -16,7 +16,7 @@ func NewOrderBook() *OrderBook {
 		ctx:                 context.Background(),
 		ordersChan:          make(chan *Order),
 		orderIDToInstrument: make(map[uint32]string),
-		instrumentToWorker:  make(map[string]Worker),
+		instrumentToWorker:  make(map[string]Worker), // currently screams because Worker not defined yet
 	}
 
 	go ob.dispatchOrders()
