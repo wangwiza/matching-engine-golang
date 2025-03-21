@@ -9,15 +9,16 @@ import (
 	"io"
 	"net"
 	"os"
-	"time"
 )
 
 type Engine struct {
 	wg *wg.WaitGroup
+	ob *OrderBook
 }
 
 func (e *Engine) Init(ctx context.Context, wg *wg.WaitGroup) {
 	e.wg = wg
+	e.ob = NewOrderBook(ctx, wg)
 }
 
 func (e *Engine) Shutdown(ctx context.Context) {
@@ -36,11 +37,11 @@ func (e *Engine) Accept(ctx context.Context, conn net.Conn) {
 	// This goroutine handles the connection.
 	go func() {
 		defer e.wg.Done()
-		handleConn(conn)
+		handleConn(conn, e.ob)
 	}()
 }
 
-func handleConn(conn net.Conn) {
+func handleConn(conn net.Conn, ob *OrderBook) {
 	defer conn.Close()
 	for {
 		in, err := utils.ReadInput(conn)
@@ -52,17 +53,23 @@ func handleConn(conn net.Conn) {
 		}
 		switch in.OrderType {
 		case utils.InputCancel:
-			fmt.Fprintf(os.Stderr, "Got cancel ID: %v\n", in.OrderId)
-			utils.OutputOrderDeleted(in, true, GetCurrentTimestamp())
+			var newOrder Order
+			newOrder.Init(in.OrderId, "", 0, 0, CANCEL)
+			ob.ordersChan <- &newOrder
+			<-newOrder.Processed
+		case utils.InputBuy:
+			var newOrder Order
+			newOrder.Init(in.OrderId, in.Instrument, in.Price, in.Count, BUY)
+			ob.ordersChan <- &newOrder
+			<-newOrder.Processed
+		case utils.InputSell:
+			var newOrder Order
+			newOrder.Init(in.OrderId, in.Instrument, in.Price, in.Count, SELL)
+			ob.ordersChan <- &newOrder
+			<-newOrder.Processed
 		default:
 			fmt.Fprintf(os.Stderr, "Got order: %c %v x %v @ %v ID: %v\n",
 				in.OrderType, in.Instrument, in.Count, in.Price, in.OrderId)
-			utils.OutputOrderAdded(in, GetCurrentTimestamp())
 		}
-		utils.OutputOrderExecuted(123, 124, 1, 2000, 10, GetCurrentTimestamp())
 	}
-}
-
-func GetCurrentTimestamp() int64 {
-	return time.Now().UnixNano()
 }
