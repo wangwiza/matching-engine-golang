@@ -4,7 +4,6 @@ import "slices"
 
 type SortedList struct {
 	elements []*Order
-	isAsc    bool
 	comp func(*Order, *Order) bool
 }
 
@@ -21,7 +20,6 @@ func NewSortedList(isAsc bool) *SortedList {
 	}
 	return &SortedList{
 		elements: make([]*Order, 0),
-		isAsc:    isAsc,
 		comp:     comp,
 	}
 }
