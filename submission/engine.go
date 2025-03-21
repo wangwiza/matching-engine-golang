@@ -56,17 +56,17 @@ func handleConn(conn net.Conn, ob *OrderBook) {
 			var newOrder Order
 			newOrder.Init(in.OrderId, "", 0, 0, CANCEL)
 			ob.ordersChan <- &newOrder
-			<- newOrder.Processed
+			<-newOrder.Processed
 		case utils.InputBuy:
 			var newOrder Order
 			newOrder.Init(in.OrderId, in.Instrument, in.Price, in.Count, BUY)
 			ob.ordersChan <- &newOrder
-			<- newOrder.Processed
+			<-newOrder.Processed
 		case utils.InputSell:
 			var newOrder Order
 			newOrder.Init(in.OrderId, in.Instrument, in.Price, in.Count, SELL)
 			ob.ordersChan <- &newOrder
-			<- newOrder.Processed
+			<-newOrder.Processed
 		default:
 			fmt.Fprintf(os.Stderr, "Got order: %c %v x %v @ %v ID: %v\n",
 				in.OrderType, in.Instrument, in.Count, in.Price, in.OrderId)

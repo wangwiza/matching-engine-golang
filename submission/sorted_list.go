@@ -4,7 +4,7 @@ import "slices"
 
 type SortedList struct {
 	elements []*Order
-	comp func(*Order, *Order) bool
+	comp     func(*Order, *Order) bool
 }
 
 // NewSortedList creates a new SortedList
