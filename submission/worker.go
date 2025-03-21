@@ -7,6 +7,8 @@ import (
 	"time"
 )
 
+// This size should be >= the number of expected clients
+// to ensure the orderbook does not block
 const QueueSize = 1000
 
 type Worker struct {
