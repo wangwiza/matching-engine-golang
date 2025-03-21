@@ -21,6 +21,7 @@ In this section we discuss the Go features we utilized in our implementation.
 Channels are used to communicate between the different goroutines. Our orderbook (load balancer) has
 an \texttt{ordersChan} channel in which the clients can send their orders.
 There are also multiple \texttt{queue} channels, one per worker, and one worker per instrument, to send orders to the workers from the load balancer.
+Each order also has their own \texttt{Processed} channel to signal to the client that the order has been processed. This allows the clients' orders to remain in order.
 
 \subsection{Gorountines}
 
@@ -42,6 +43,15 @@ The workers have a goroutine that listens to the \texttt{queue} channel and proc
     terminate. To ensure that the goroutines has finished terminating before the engine shuts down,
     we use wait groups to wait for goroutines to terminate.
 
+\end{itemize}
+
+\section{Data Structures}
+
+\begin{itemize}
+    \item \textbf{Order} - a struct that represents an order. Nothing fancy.
+    \item \textbf{Worker} - a struct that represents a worker. Only responsible for one instrument. Has two sorted lists for buy and sell orders.
+    \item \textbf{OrderBook} - a struct that represents the load balancer. Has a map of workers, one per instrument. ALso has a map of instruments, one per order id.
+    \item \textbf{SortedList} - encapsulates a slice, adds sorted insertion functionality. Used for priority queues of orders in Worker.
 \end{itemize}
 
 \section{Concurrency Level}
