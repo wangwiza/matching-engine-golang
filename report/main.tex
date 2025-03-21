@@ -18,20 +18,21 @@ In this section we discuss the Go features we utilized in our implementation.
 
 \subsection{Channels}
 
-Channels are used to communicate between the different goroutines. Our orderbook (load balancer) has an `ordersChan` channel in which the clients can send their orders.
-There are also multiple `queue` channels, one per worker, and one worker per instrument, to send orders to the workers from the load balancer.
+Channels are used to communicate between the different goroutines. Our orderbook (load balancer) has
+an \texttt{ordersChan} channel in which the clients can send their orders.
+There are also multiple \texttt{queue} channels, one per worker, and one worker per instrument, to send orders to the workers from the load balancer.
 
 \subsection{Gorountines}
 
-We use goroutines to implement the balancing functionality of the load balancer, and the worker functionality of the workers. 
-The load balancer has a goroutine that listens to the `ordersChan` channel and sends the orders to the appropriate worker. 
-The workers have a goroutine that listens to the `queue` channel and processes the orders.
+We use goroutines to implement the balancing functionality of the load balancer, and the worker functionality of the workers.
+The load balancer has a goroutine that listens to the \texttt{ordersChan} channel and sends the orders to the appropriate worker.
+The workers have a goroutine that listens to the \texttt{queue} channel and processes the orders.
 
 \subsection{Go Patterns}
 
 \begin{itemize}
 
-\item \textbf{for-select loop} - We use a for-select loop in the load balancer to listen to the `ordersChan` channel and send the orders to the appropriate worker.
+\item \textbf{for-select loop} - We use a for-select loop in the load balancer to listen to the \texttt{ordersChan} channel and send the orders to the appropriate worker.
 \item \textbf{Fan-in} - We use a fan-in pattern to collect orders from the client goroutines and send them to the load balancer.
 \item \textbf{Fan-out} - We use a fan-out pattern to send orders from the load balancer to the workers.
 \item \textbf{Load Balancer} - We use a load balancer pattern to distribute the orders to the workers. In our case, least load just means the worker with the same instrument
