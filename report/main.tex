@@ -50,7 +50,8 @@ The workers have a goroutine that listens to the \texttt{queue} channel and proc
 \begin{itemize}
     \item \textbf{Order} - a struct that represents an order. Nothing fancy.
     \item \textbf{Worker} - a struct that represents a worker. Only responsible for one instrument. Has two sorted lists for buy and sell orders.
-    \item \textbf{OrderBook} - a struct that represents the load balancer. Has a map of workers, one per instrument. ALso has a map of instruments, one per order id.
+    \item \textbf{OrderBook} - a struct that represents the load balancer. Has a map of workers, one
+        per instrument. Also has a map of instruments, one per order id.
     \item \textbf{SortedList} - encapsulates a slice, adds sorted insertion functionality. Used for priority queues of orders in Worker.
 \end{itemize}
 
