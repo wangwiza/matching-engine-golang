@@ -4,7 +4,7 @@
 [![Go Reference](https://pkg.go.dev/badge/github.com/wangwiza/matching-engine-golang.svg)](https://pkg.go.dev/github.com/wangwiza/matching-engine-golang)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-A high-performance, low-latency financial order matching engine built in Go. This project implements a Central Limit Order Book (CLOB) and is designed for applications requiring efficient trade execution, such as cryptocurrency exchanges, stock trading platforms, or other financial marketplaces. 📈
+A high-performance, low-latency financial order matching engine built in Go. This project implements a Central Limit Order Book (CLOB) and is designed for applications requiring efficient trade execution, such as cryptocurrency exchanges, stock trading platforms, or other financial marketplaces.
 
 ---
 
@@ -31,8 +31,6 @@ The matching engine's core is the `Orderbook`. It maintains two separate priorit
 3.  **Order Book Update**: If the order is not fully filled, the remaining quantity is placed in the corresponding priority queue within the order book, waiting to be matched by future orders.
 4.  **Trade Execution**: When a match occurs, a `Trade` is generated and can be broadcast to notify relevant parties.
 
-
-
 This design ensures that orders are matched based on **price-time priority**:
 * **Price**: Higher bids match lower asks.
 * **Time**: For orders at the same price, the one that arrived earlier gets matched first.
@@ -46,31 +44,49 @@ Follow these instructions to get a local copy up and running.
 ### Prerequisites
 
 * **Go**: Version 1.18 or higher.
+* **C++ Compiler**: A C++20 compatible compiler like clang++ or g++.
 
 You can check your Go version with:
 ```sh
 go version
 ```
 
-### Installation & Running
+### Build
 
 1.  **Clone the repository:**
+
     ```sh
     git clone [https://github.com/wangwiza/matching-engine-golang.git](https://github.com/wangwiza/matching-engine-golang.git)
     cd matching-engine-golang
     ```
 
-2.  **Install dependencies:**
+2.  **Build the matching engine:**
+
     ```sh
-    go mod tidy
+    make engine
     ```
 
-3.  **Run the tests to verify functionality:**
+3.  **Build the client:**
+
     ```sh
-    go test ./...
+    make client
     ```
 
----
+### Running
+
+1.  **Run the matching engine:**
+
+    ```sh
+    ./engine
+    ```
+
+2.  **In a separate terminal, run the client with an input file:**
+
+    ```sh
+    ./client <path_to_socket> < <input_file>
+    ```
+
+-----
 
 ## Usage Example
 
@@ -122,12 +138,11 @@ func main() {
 	fmt.Printf("Bids: %+v\n", ob.Bids())
 	fmt.Printf("Asks: %+v\n", ob.Asks())
 }
-
 ```
 
 ### Key Data Structures
 
-* `Order`: Represents a single buy or sell order.
+  * `Order`: Represents a single buy or sell order.
     ```go
     type Order struct {
         ID        string
@@ -136,7 +151,7 @@ func main() {
         Timestamp int64
     }
     ```
-* `Orderbook`: Manages the collections of bids and asks.
+  * `Orderbook`: Manages the collections of bids and asks.
     ```go
     type Orderbook struct {
         instrument string
@@ -144,7 +159,7 @@ func main() {
         bids       *BidPriceLevel // Max-heap for bids
     }
     ```
-* `Trade`: Represents a successful match between a bid and an ask.
+  * `Trade`: Represents a successful match between a bid and an ask.
     ```go
     type Trade struct {
         TakerOrderID string
@@ -155,11 +170,11 @@ func main() {
     }
     ```
 
----
+-----
 
 ## Contributing
 
-Contributions are welcome! If you'd like to contribute, please follow these steps:
+Contributions are welcome\! If you'd like to contribute, please follow these steps:
 
 1.  **Fork** the repository.
 2.  Create a new **feature branch** (`git checkout -b feature/AmazingFeature`).
@@ -167,7 +182,7 @@ Contributions are welcome! If you'd like to contribute, please follow these step
 4.  **Push** to the branch (`git push origin feature/AmazingFeature`).
 5.  Open a **Pull Request**.
 
----
+-----
 
 ## License
 
